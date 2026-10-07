@@ -1,38 +1,39 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard Pemeliharaan Pesawat — Contoh</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Master Data | DMI & Readiness</title><link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="wrap">
-    <header class="topbar">
-      <div><p class="eyebrow">CONTOH DATA SINTETIS</p><h1>Dashboard pemeliharaan</h1><p class="sub">Ringkasan catatan pekerjaan pesawat</p></div>
-      <div class="badge" id="updated">Memuat data…</div>
-    </header>
-    <section class="filters" aria-label="Filter data">
-      <label>Bulan<select id="month"><option value="">Semua bulan</option></select></label>
-      <label>Status pekerjaan<select id="status"><option value="">Semua status</option></select></label>
-      <button id="reset" type="button">Reset filter</button>
-    </section>
-    <section class="cards" aria-label="Ringkasan">
-      <article class="card"><span>Catatan pekerjaan</span><strong id="total">—</strong></article>
-      <article class="card"><span>Kasus AOG</span><strong id="aog">—</strong></article>
-      <article class="card"><span>Rata-rata durasi</span><strong id="duration">—</strong></article>
-      <article class="card"><span>Pesawat demo</span><strong id="aircraft">—</strong></article>
-    </section>
-    <section class="charts">
-      <article class="panel"><h2>Catatan per bulan</h2><div id="monthly" class="bars"></div></article>
-      <article class="panel"><h2>Status pekerjaan</h2><div id="statuses" class="bars"></div></article>
-    </section>
-    <section class="panel table-panel">
-      <div class="table-heading"><div><h2>Daftar pekerjaan</h2><p id="count-note"></p></div></div>
-      <div class="table-scroll"><table><thead><tr><th>Tanggal</th><th>Pesawat</th><th>Stasiun</th><th>Kategori</th><th>Defect</th><th>Status</th><th>Durasi (jam)</th></tr></thead><tbody id="rows"></tbody></table></div>
-    </section>
-    <footer>Contoh demonstrasi. Ganti data sintetis di <code>data.csv</code> dengan ekspor data Anda yang sudah dibersihkan.</footer>
-  </main>
-  <script src="app.js"></script>
-</body>
-</html>
+<main class="shell">
+  <header class="header"><div><div class="eyebrow">WINGS AIR · MASTER DATA</div><h1>DMI & aircraft readiness</h1><p>Ringkasan pekerjaan tertunda dan kesiapan armada dari Google Sheets.</p></div><div class="load-status" id="load-status"><span class="dot"></span> Menghubungkan ke spreadsheet</div></header>
+  <section class="controls" aria-label="Filter dashboard">
+    <label>Working group<select id="wg"><option value="all">Semua WG</option><option>WG 10</option><option>WG 11</option><option>WG 12</option></select></label>
+    <label>Bulan aktivitas DMI<select id="month"><option value="all">Semua bulan</option></select></label>
+    <label class="search">Cari pesawat / defect<input id="search" type="search" placeholder="Contoh: PK-W… atau kata defect"></label>
+    <label class="check"><input id="over3" type="checkbox"> Hanya DMI terbuka &gt; 3 hari</label>
+  </section>
+  <section class="metrics" aria-label="Indikator utama">
+    <article class="metric"><span>DMI masih terbuka</span><strong id="open-total">—</strong><small>Closed Date kosong</small></article>
+    <article class="metric"><span>Terbuka lebih dari 3 hari</span><strong id="over3-total">—</strong><small id="over3-share">berdasarkan tanggal buka</small></article>
+    <article class="metric"><span>DMI dibuka pada bulan terpilih</span><strong id="opened-month">—</strong><small id="month-label-open">—</small></article>
+    <article class="metric"><span>DMI ditutup pada bulan terpilih</span><strong id="closed-month">—</strong><small id="month-label-close">—</small></article>
+    <article class="metric readiness-metric"><span>Rata-rata readiness · Jan 2026</span><strong id="readiness-average">—</strong><small id="readiness-sub">target sumber &gt;90%</small></article>
+  </section>
+  <section class="grid two-col">
+    <article class="panel"><div class="panel-head"><div><h2>Aktivitas DMI per bulan</h2><p>Dibuka dan ditutup menurut tanggal pada sumber.</p></div></div><div id="activity-chart" class="chart"></div><div class="legend"><span><i class="key blue"></i>Dibuka</span><span><i class="key green"></i>Ditutup</span></div></article>
+    <article class="panel"><div class="panel-head"><div><h2>Backlog terbuka menurut WG</h2><p>Dihitung dari kolom Closed Date yang kosong.</p></div></div><div id="wg-chart" class="bars"></div></article>
+  </section>
+  <section class="panel readiness-panel"><div class="panel-head"><div><h2>Aircraft readiness harian</h2><p>Januari 2026 · persentase per WG dari tab readiness sumber.</p></div><span class="target-chip">Target &gt;90%</span></div><div id="readiness-chart" class="line-chart"></div><div id="readiness-legend" class="legend"></div><div id="readiness-summary" class="readiness-summary"></div></section>
+  <section class="grid two-col">
+    <article class="panel"><div class="panel-head"><div><h2>Backlog terbuka menurut MEL category</h2><p>Distribusi kategori pada DMI yang belum ditutup.</p></div></div><div id="mel-chart" class="bars"></div></article>
+    <article class="panel"><div class="panel-head"><div><h2>Stasiun dengan backlog terbuka terbanyak</h2><p>Sepuluh stasiun teratas berdasarkan STA Open.</p></div></div><div id="station-chart" class="bars"></div></article>
+  </section>
+  <section class="panel table-panel"><div class="panel-head table-head"><div><h2>Daftar DMI terbuka</h2><p id="table-count">Menunggu data…</p></div><button id="clear-search" type="button">Reset pencarian</button></div><div class="table-scroll"><table><thead><tr><th>Umur</th><th>WG</th><th>Registrasi</th><th>Tanggal buka</th><th>MEL</th><th>Stasiun</th><th>Deskripsi defect</th><th>PN description</th><th>Restriksi</th></tr></thead><tbody id="dmi-rows"><tr><td colspan="9">Mengambil data dari spreadsheet…</td></tr></tbody></table></div></section>
+  <section class="notes"><strong>Definisi dan cakupan</strong><span>DMI terbuka = Closed Date kosong. Umur dihitung dari Open Date sampai hari ini. Aktivitas bulanan menghitung tanggal buka/tutup pada tahun berjalan.</span><span>Readiness ditampilkan untuk Januari 2026, sesuai tanggal harian yang tersedia pada tab AC Readiness WG 10/11/12.</span><span>Data dibaca langsung dari enam tab sumber. Dashboard ini tidak mengubah spreadsheet.</span><span id="data-note"></span></section>
+  <footer>MASTER DATA · sumber Google Sheets · <a href="https://docs.google.com/spreadsheets/d/1ZVaSFBW8X_hdWGzOlRiQK1TWmULKJIch_xU45dRuPMs/edit" target="_blank" rel="noopener">Buka spreadsheet</a></footer>
+</main>
+<script src="app.js?v=4"></script>
+</body></html>
+
+
