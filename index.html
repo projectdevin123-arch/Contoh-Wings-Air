@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Pemeliharaan Pesawat — Contoh</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="topbar">
+      <div><p class="eyebrow">CONTOH DATA SINTETIS</p><h1>Dashboard pemeliharaan</h1><p class="sub">Ringkasan catatan pekerjaan pesawat</p></div>
+      <div class="badge" id="updated">Memuat data…</div>
+    </header>
+    <section class="filters" aria-label="Filter data">
+      <label>Bulan<select id="month"><option value="">Semua bulan</option></select></label>
+      <label>Status pekerjaan<select id="status"><option value="">Semua status</option></select></label>
+      <button id="reset" type="button">Reset filter</button>
+    </section>
+    <section class="cards" aria-label="Ringkasan">
+      <article class="card"><span>Catatan pekerjaan</span><strong id="total">—</strong></article>
+      <article class="card"><span>Kasus AOG</span><strong id="aog">—</strong></article>
+      <article class="card"><span>Rata-rata durasi</span><strong id="duration">—</strong></article>
+      <article class="card"><span>Pesawat demo</span><strong id="aircraft">—</strong></article>
+    </section>
+    <section class="charts">
+      <article class="panel"><h2>Catatan per bulan</h2><div id="monthly" class="bars"></div></article>
+      <article class="panel"><h2>Status pekerjaan</h2><div id="statuses" class="bars"></div></article>
+    </section>
+    <section class="panel table-panel">
+      <div class="table-heading"><div><h2>Daftar pekerjaan</h2><p id="count-note"></p></div></div>
+      <div class="table-scroll"><table><thead><tr><th>Tanggal</th><th>Pesawat</th><th>Stasiun</th><th>Kategori</th><th>Defect</th><th>Status</th><th>Durasi (jam)</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </section>
+    <footer>Contoh demonstrasi. Ganti data sintetis di <code>data.csv</code> dengan ekspor data Anda yang sudah dibersihkan.</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
